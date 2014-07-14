@@ -1,15 +1,15 @@
 {
-  "name": "event_emitter",
+  "name": "ejs",
   "version": "0.0.1",
-  "homepage": "https://github.com/nathanfaucett/event_emitter",
+  "homepage": "https://github.com/nathanfaucett/ejs",
   "authors": [
     "nathanfaucett <nathanfaucett@gmail.com>"
   ],
-  "description": "EventEmitter for the browser and node.js",
+  "description": "ejs for the browser and node.js",
   "main": "src/index.js",
   "keywords": [
-    "event_emitter",
-    "event_emitter.js"
+    "ejs",
+    "ejs.js"
   ],
   "license": "MIT",
   "ignore": [

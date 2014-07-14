@@ -1,15 +1,15 @@
 {
-  "name": "event_emitter",
+  "name": "ejs",
   "version": "0.0.1",
-  "description": "EventEmitter for the browser and node.js",
+  "description": "ejs for the browser and node.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nathanfaucett/event_emitter.git"
+    "url": "https://github.com/nathanfaucett/ejs.git"
   },
   "main": "src/index.js",
   "keywords": [
-    "event_emitter",
-    "event_emitter.js"
+    "ejs",
+    "ejs.js"
   ],
   "author": "Nathan Faucett",
   "license": "BSD-2-Clause",
@@ -17,6 +17,9 @@
   "devDependencies": {
     "grunt": "",
     "grunt-jsbeautifier": ""
+  },
+  "dependencies": {
+    "utils": "nathanfaucett/utils"
   }
 }
 

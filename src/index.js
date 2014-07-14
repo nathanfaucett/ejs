@@ -1,191 +1,96 @@
-var shift = Array.prototype.shift,
-    has = Object.prototype.hasOwnProperty;
+var utils = require("utils");
 
 
-function EventObject(listener, ctx) {
-    this.listener = listener;
-    this.ctx = ctx;
-}
+var isBrowser = typeof(window) !== "undefined",
+    ejs = module.exports,
+    readFile, fs;
 
 
-function EventEmitter() {
+if (isBrowser) {
+    fs = require("fs");
+    
+    readFile = function(path, encoding, callback) {
+        var request = new XMLHttpRequest;
 
-    this._events = {};
-    this._maxListeners = EventEmitter.defaultMaxListeners;
-}
+        request.addEventListener("load", function() {
+            var status = this.status;
 
-EventEmitter.defaultMaxListeners = 10;
-
-EventEmitter.prototype.on = function(type, listener, ctx) {
-    var events = this._events,
-        event = (events[type] || (events[type] = [])),
-        maxListeners = this._maxListeners;
-
-    event.push(new EventObject(listener, ctx || this));
-
-    if (maxListeners !== -1 && event.length > maxListeners) {
-        console.error("EventEmitter.on(type, listener, ctx) possible EventEmitter memory leak detected. " + maxListeners + " listeners added");
-    }
-
-    return this;
-};
-
-EventEmitter.prototype.addListener = EventEmitter.prototype.on;
-
-EventEmitter.prototype.once = function(type, listener, ctx) {
-    var _this = this;
-    ctx || (ctx = this);
-
-    function once() {
-        _this.off(type, once, ctx);
-        var length = arguments.length;
-
-        if (length === 0) {
-            return listener.call(ctx);
-        } else if (length === 1) {
-            return listener.call(ctx, arguments[0]);
-        } else if (length === 2) {
-            return listener.call(ctx, arguments[0], arguments[1]);
-        } else if (length === 3) {
-            return listener.call(ctx, arguments[0], arguments[1], arguments[2]);
-        } else if (length === 4) {
-            return listener.call(ctx, arguments[0], arguments[1], arguments[2], arguments[3]);
-        } else if (length === 5) {
-            return listener.call(ctx, arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
-        }
-
-        return listener.apply(ctx, arguments);
-    }
-
-    return this.on(type, once, ctx);
-};
-
-EventEmitter.prototype.listenTo = function(obj, type, listener, ctx) {
-    if (!(has.call(obj, "on") && typeof(obj.on) === "function")) {
-        throw new TypeError("EventEmitter.listenTo(obj, type, listener, ctx) obj must extend EventEmitter");
-    }
-
-    obj.on(type, listener, ctx || this);
-
-    return this;
-};
-
-EventEmitter.prototype.off = function(type, listener, ctx) {
-    var thisEvents = this._events,
-        events, event,
-        i;
-
-    if (!type) {
-        for (var key in thisEvents) {
-            if ((events = thisEvents[key])) events.length = 0;
-        }
-
-        return this;
-    }
-
-    events = thisEvents[type];
-    if (!events) return this;
-
-    if (!listener) {
-        events.length = 0;
-    } else {
-        ctx = ctx || this;
-        i = events.length;
-
-        while (i--) {
-            event = events[i];
-
-            if (event.listener === listener && event.ctx === ctx) {
-                events.splice(i, 1);
-                break;
+            if ((status > 199 && status < 301) || status == 304) {
+                callback(null, this.responseText);
+            } else {
+                callback(new Error(status));
             }
-        }
-    }
+        }, false);
+        request.addEventListener("error", function() {
+            callback(new Error("ENOENT"));
+        }, false);
 
-    return this;
+        request.open("GET", src, true);
+        request.setRequestHeader("Content-Type", "text/plain");
+        request.send();
+    };
+} else {
+    readFile = function(path, encoding, callback) {
+        fs.readFile(path, encoding, function(err, data) {
+            if (err) {
+                callback(err);
+                return;
+            }
+            
+            callback(null, data.toString(encoding));
+        });
+    }
+}
+
+
+ejs.templates = {};
+ejs.settings = {
+	start: "<%",
+    end: "%>",
+    interpolate: "=",
+    escape: "-"
 };
 
-EventEmitter.prototype.removeListener = EventEmitter.prototype.off;
-
-EventEmitter.prototype.removeAllListeners = function() {
-    var events = this._events,
-        event;
-
-    for (var key in events) {
-        if ((event = events[i])) event.length = 0;
-    }
-};
-
-EventEmitter.prototype.emit = function(type) {
-    var events = this._events[type],
-        a1, a2, a3, a4,
-        length, event,
-        i;
-
-    if (!events || !events.length) return this;
-    length = arguments.length;
-
-    if (length === 1) {
-        i = events.length;
-        while (i--) {
-            (event = events[i]).listener.call(event.ctx);
-        }
-    } else if (length === 2) {
-        a1 = arguments[1];
-        i = events.length;
-        while (i--) {
-            (event = events[i]).listener.call(event.ctx, a1);
-        }
-    } else if (length === 3) {
-        a1 = arguments[1];
-        a2 = arguments[2];
-        i = events.length;
-        while (i--) {
-            (event = events[i]).listener.call(event.ctx, a1, a2);
-        }
-    } else if (length === 4) {
-        a1 = arguments[1];
-        a2 = arguments[2];
-        a3 = arguments[3];
-        i = events.length;
-        while (i--) {
-            (event = events[i]).listener.call(event.ctx, a1, a2, a3);
-        }
-    } else if (length === 5) {
-        a1 = arguments[1];
-        a2 = arguments[2];
-        a3 = arguments[3];
-        a4 = arguments[4];
-        i = events.length;
-        while (i--) {
-            (event = events[i]).listener.call(event.ctx, a1, a2, a3, a4);
-        }
+ejs.render = function(path, opts, callback) {
+    var encoding = opts.encoding || "utf-8",
+        cache = !!opts.cache,
+        cached = cache ? ejs.templates[path] : null;
+    
+	opts.settings = utils.mixin(opts.settings || {}, ejs.settings);
+	
+    if (!cached) {
+        readFile(path, encoding, function(err, data) {
+            if (err) {
+                callback(err);
+                return;
+            }
+            var fn;
+            
+            try {
+                fn = utils.template(data, null, opts.settings);
+            } catch(e) {
+                callback(e);
+                return;
+            }
+            
+            if (cache) ejs.templates[path] = fn;
+            render(fn, opts.locals, callback);
+        });
     } else {
-        shift.apply(arguments);
-        i = events.length;
-        while (i--) {
-            (event = events[i]).listener.apply(event.ctx, arguments);
-        }
+        render(cached, opts.locals, callback);
     }
-
-    return this;
-};
-
-EventEmitter.prototype.setMaxListeners = function(count) {
-    this._maxListeners = count;
-    return this;
-};
-
-EventEmitter.extend = function(child, parent) {
-    if (!parent) parent = this;
-
-    child.prototype = Object.create(parent.prototype);
-    child.prototype.constructor = child;
-    child.prototype._super = parent.prototype;
-    child.extend = parent.extend;
-
-    return child;
 };
 
 
-module.exports = EventEmitter;
+function render(template, locals, callback) {
+    var str;
+    
+    try{
+        str = template(locals);
+    } catch(e) {
+        callback(e);
+        return;
+    }
+    
+    callback(null, str);
+}

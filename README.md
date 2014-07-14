@@ -1,4 +1,4 @@
-EventEmitter
+EJS
 =======
 
-EventEmitter for the browser and node.js
+ejs for the browser and node.js
