@@ -7,8 +7,6 @@ var isBrowser = typeof(window) !== "undefined",
 
 
 if (isBrowser) {
-    fs = require("fs");
-    
     readFile = function(path, encoding, callback) {
         var request = new XMLHttpRequest;
 
@@ -30,6 +28,8 @@ if (isBrowser) {
         request.send();
     };
 } else {
+    fs = require("fs");
+    
     readFile = function(path, encoding, callback) {
         fs.readFile(path, encoding, function(err, data) {
             if (err) {
