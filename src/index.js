@@ -1,7 +1,7 @@
 var utils = require("utils");
 
 
-var isBrowser = typeof(window) !== "undefined",
+var isBrowser = !!(typeof(window) !== "undefined" && typeof(navigator) !== "undefined" && window.document),
     ejs = module.exports,
     readFile, fs;
 
@@ -29,14 +29,14 @@ if (isBrowser) {
     };
 } else {
     fs = require("fs");
-    
+
     readFile = function(path, encoding, callback) {
         fs.readFile(path, encoding, function(err, data) {
             if (err) {
                 callback(err);
                 return;
             }
-            
+
             callback(null, data.toString(encoding));
         });
     }
@@ -45,7 +45,7 @@ if (isBrowser) {
 
 ejs.templates = {};
 ejs.settings = {
-	start: "<%",
+    start: "<%",
     end: "%>",
     interpolate: "=",
     escape: "-"
@@ -55,9 +55,10 @@ ejs.render = function(path, opts, callback) {
     var encoding = opts.encoding || "utf-8",
         cache = !!opts.cache,
         cached = cache ? ejs.templates[path] : null;
-    
-	opts.settings = utils.mixin(opts.settings || {}, ejs.settings);
-	
+
+    opts.locals || (opts.locals = {});
+    opts.settings = utils.mixin(opts.settings || {}, ejs.settings);
+
     if (!cached) {
         readFile(path, encoding, function(err, data) {
             if (err) {
@@ -65,14 +66,14 @@ ejs.render = function(path, opts, callback) {
                 return;
             }
             var fn;
-            
+
             try {
                 fn = utils.template(data, null, opts.settings);
-            } catch(e) {
+            } catch (e) {
                 callback(e);
                 return;
             }
-            
+
             if (cache) ejs.templates[path] = fn;
             render(fn, opts.locals, callback);
         });
@@ -84,13 +85,13 @@ ejs.render = function(path, opts, callback) {
 
 function render(template, locals, callback) {
     var str;
-    
-    try{
+
+    try {
         str = template(locals);
-    } catch(e) {
+    } catch (e) {
         callback(e);
         return;
     }
-    
+
     callback(null, str);
 }
