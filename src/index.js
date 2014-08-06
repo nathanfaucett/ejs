@@ -1,4 +1,5 @@
-var utils = require("utils");
+var utils = require("utils"),
+    template = require("template");
 
 
 var isBrowser = !!(typeof(window) !== "undefined" && typeof(navigator) !== "undefined" && window.document),
@@ -68,7 +69,7 @@ ejs.render = function(path, opts, callback) {
             var fn;
 
             try {
-                fn = utils.template(data, null, opts.settings);
+                fn = template(data, null, opts.settings);
             } catch (e) {
                 callback(e);
                 return;
@@ -83,11 +84,11 @@ ejs.render = function(path, opts, callback) {
 };
 
 
-function render(template, locals, callback) {
+function render(temp, locals, callback) {
     var str;
 
     try {
-        str = template(locals);
+        str = temp(locals);
     } catch (e) {
         callback(e);
         return;
