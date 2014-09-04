@@ -1,11 +1,19 @@
-var utils = require("utils"),
-    template = require("template");
+var template = require("template");
 
 
 var isBrowser = !!(typeof(window) !== "undefined" && typeof(navigator) !== "undefined" && window.document),
     ejs = module.exports,
     readFile, fs;
 
+
+function mixin(a, b) {
+    var key, value;
+
+    for (key in b) {
+        if (a[key] == null && (value = b[key]) != null) a[key] = value;
+    }
+    return a;
+}
 
 if (isBrowser) {
     readFile = function(path, encoding, callback) {
@@ -58,7 +66,7 @@ ejs.render = function(path, opts, callback) {
         cached = cache ? ejs.templates[path] : null;
 
     opts.locals || (opts.locals = {});
-    opts.settings = utils.mixin(opts.settings || {}, ejs.settings);
+    opts.settings = mixin(opts.settings || {}, ejs.settings);
 
     if (!cached) {
         readFile(path, encoding, function(err, data) {
