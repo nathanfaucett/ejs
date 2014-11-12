@@ -41,8 +41,10 @@ if (isBrowser) {
             };
         }
 
-        xhr.open("GET", src, true);
-        xhr.setRequestHeader("Content-Type", "text/plain");
+        xhr.open("GET", path, true);
+        if (xhr.setRequestHeader) {
+            xhr.setRequestHeader("Content-Type", "text/plain");
+        }
         xhr.send();
     };
 } else {
