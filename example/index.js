@@ -2,6 +2,7 @@ global.ejs = require("../src/index.js");
 
 
 ejs.render("example/template.ejs", {
+    cache: true,
     locals: {
         list: [{
             title: "Title 1"

@@ -20,7 +20,8 @@
     "grunt-jsbeautifier": ""
   },
   "dependencies": {
-    "template": "nathanfaucett/template"
+    "template": "nathanfaucett/template",
+    "environment": "nathanfaucett/environment"
   }
 }
 

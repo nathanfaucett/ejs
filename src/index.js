@@ -1,9 +1,8 @@
-var template = require("template");
+var template = require("template"),
+    environment = require("environment");
 
 
 var ejs = module.exports,
-
-    isBrowser = !!(typeof(window) !== "undefined" && typeof(navigator) !== "undefined" && window.document),
     readFile, fs;
 
 
@@ -16,7 +15,7 @@ function mixin(a, b) {
     return a;
 }
 
-if (isBrowser) {
+if (environment.browser) {
     readFile = function readFile(path, encoding, callback) {
         var xhr = new XMLHttpRequest();
 
