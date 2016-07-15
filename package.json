@@ -1,5 +1,5 @@
 {
-  "name": "ejs",
+  "name": "@nathanfaucett/ejs",
   "version": "0.0.1",
   "description": "ejs for the browser and node.js",
   "repository": {
@@ -7,6 +7,13 @@
     "url": "https://github.com/nathanfaucett/ejs.git"
   },
   "main": "src/index.js",
+  "scripts": {
+    "example": "comn -f ./example/index.js -o ./example/index.min.js",
+    "test": "npm run test-node",
+    "test-node": "node ./test | ./node_modules/.bin/tap-spec",
+    "test-node-raw": "node ./test",
+    "test-browser-local": "zuul --local 9999 --ui tape -- ./test"
+  },
   "keywords": [
     "ejs",
     "ejs.js"
@@ -15,13 +22,17 @@
   "license": "BSD-2-Clause",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "grunt": "",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-jsbeautifier": ""
+    "@nathanfaucett/comn": "0.0.1",
+    "grunt": "^1.0.1",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-jsbeautifier": "^0.2.13",
+    "tap-spec": "^4.1.0",
+    "tape": "^4.2.0",
+    "zuul": "^3.3.0"
   },
   "dependencies": {
-    "template": "nathanfaucett/template",
-    "environment": "nathanfaucett/environment"
+    "@nathanfaucett/xmlhttprequest_polyfill": "^0.0.1",
+    "@nathanfaucett/template": "^0.0.1",
+    "@nathanfaucett/environment": "^0.0.1"
   }
 }
-

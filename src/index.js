@@ -1,5 +1,6 @@
-var template = require("template"),
-    environment = require("environment");
+var template = require("@nathanfaucett/template"),
+    environment = require("@nathanfaucett/environment"),
+    XMLHttpRequestPolyfill;
 
 
 var ejs = module.exports,
@@ -16,8 +17,10 @@ function mixin(a, b) {
 }
 
 if (environment.browser) {
+    XMLHttpRequestPolyfill = require("@nathanfaucett/xmlhttprequest_polyfill");
+
     readFile = function readFile(path, encoding, callback) {
-        var xhr = new XMLHttpRequest();
+        var xhr = new XMLHttpRequestPolyfill();
 
         function oncomplete() {
             var status = +xhr.status;
@@ -29,21 +32,11 @@ if (environment.browser) {
             }
         }
 
-        if (xhr.addEventListener) {
-            xhr.addEventListener("load", oncomplete, false);
-            xhr.addEventListener("error", oncomplete, false);
-        } else {
-            xhr.onreadystatechange = function onreadystatechange() {
-                if (+xhr.readyState === 4) {
-                    oncomplete();
-                }
-            };
-        }
+        xhr.addEventListener("load", oncomplete, false);
+        xhr.addEventListener("error", oncomplete, false);
 
         xhr.open("GET", path, true);
-        if (xhr.setRequestHeader) {
-            xhr.setRequestHeader("Content-Type", "text/plain");
-        }
+        xhr.setRequestHeader("Content-Type", "text/plain");
         xhr.send();
     };
 } else {

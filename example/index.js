@@ -1,7 +1,7 @@
-global.ejs = require("../src/index.js");
+global.ejs = require("..");
 
 
-ejs.render("example/template.ejs", {
+ejs.render("template.ejs", {
     cache: true,
     locals: {
         list: [{
@@ -26,6 +26,5 @@ ejs.render("example/template.ejs", {
     }
 }, function(err, html) {
     var el = document.getElementById("app");
-
     el.innerHTML = html;
 });
