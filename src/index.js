@@ -1,4 +1,5 @@
-var template = require("@nathanfaucett/template"),
+var mixin = require("@nathanfaucett/mixin"),
+    template = require("@nathanfaucett/template"),
     environment = require("@nathanfaucett/environment"),
     XMLHttpRequestPolyfill;
 
@@ -6,15 +7,6 @@ var template = require("@nathanfaucett/template"),
 var ejs = module.exports,
     readFile, fs;
 
-
-function mixin(a, b) {
-    var key, value;
-
-    for (key in b) {
-        if (a[key] == null && (value = b[key]) != null) a[key] = value;
-    }
-    return a;
-}
 
 if (environment.browser) {
     XMLHttpRequestPolyfill = require("@nathanfaucett/xmlhttprequest_polyfill");

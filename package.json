@@ -1,6 +1,6 @@
 {
   "name": "@nathanfaucett/ejs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ejs for the browser and node.js",
   "repository": {
     "type": "git",
@@ -31,8 +31,9 @@
     "zuul": "^3.3.0"
   },
   "dependencies": {
-    "@nathanfaucett/xmlhttprequest_polyfill": "^0.0.1",
+    "@nathanfaucett/environment": "^0.0.1",
+    "@nathanfaucett/mixin": "0.0.1",
     "@nathanfaucett/template": "^0.0.1",
-    "@nathanfaucett/environment": "^0.0.1"
+    "@nathanfaucett/xmlhttprequest_polyfill": "^0.0.1"
   }
 }
