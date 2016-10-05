@@ -1,6 +1,6 @@
 {
   "name": "@nathanfaucett/ejs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "ejs for the browser and node.js",
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
   "license": "BSD-2-Clause",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "@nathanfaucett/comn": "0.0.1",
+    "@nathanfaucett/comn": "^0.0.11",
     "grunt": "^1.0.1",
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-jsbeautifier": "^0.2.13",
@@ -31,9 +31,9 @@
     "zuul": "^3.3.0"
   },
   "dependencies": {
-    "@nathanfaucett/environment": "^0.0.1",
-    "@nathanfaucett/mixin": "0.0.1",
+    "@nathanfaucett/environment": "^0.0.2",
+    "@nathanfaucett/mixin": "0.0.2",
     "@nathanfaucett/template": "^0.0.1",
-    "@nathanfaucett/xmlhttprequest_polyfill": "^0.0.1"
+    "@nathanfaucett/xmlhttprequest_polyfill": "^0.0.4"
   }
 }
